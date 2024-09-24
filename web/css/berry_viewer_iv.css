@@ -1,0 +1,71 @@
+body {
+	background-color: #2e2e2e;
+	font-family: sans-serif;
+	color: white;
+}
+.main-container {
+	background-color: #353535;
+	border: 1px solid #1c1c1c;
+	max-width: 80vw;
+}
+.hr-container {
+	margin: max(1vw, 1.5vh) auto;
+	width: 90%;
+}
+.hr-container hr {
+	color: #303030;
+	height: 1px;
+}
+.header-container {
+	background-color: #282828;
+	border: 1px solid #282828;
+	padding-left: 4vw;
+	padding-right: 4vw;
+}
+.subheader-container {
+	padding-left: 4vw;
+	padding-right: 4vw;
+	font-size: larger;
+}
+table {
+	border: 1px solid #1c1c1c;
+	background-color: #2d2d2d;
+	border-collapse: collapse;
+	width: 90%;
+}
+table .header-row {	
+	border-bottom: 1px solid #4d4d4d;
+	color: #8e8e8e;
+	font-size: max(1vw, 1.5vh);
+}
+table tr {
+	height: 4vh;
+	font-size: max(1vw, 1.5vh);
+}
+table th:not(:first-child){
+	border-left: 1px solid #4d4d4d;
+}
+table th, td{
+	padding-left: .5vw;
+	padding-right: .5vw;
+	margin: 0 auto;
+	text-align: center;
+}
+.input-table select, .input-table input[type=time] {
+	border: none;
+	background-color: rgba(0,0,0,0);
+	color: white;
+	height: max(1.5vw, 2vh);
+	width: 95%;
+	margin: 0.5vh auto;
+	font-size: max(1vw, 1.5vh);
+	text-align: center;
+}
+.berry-info-table tr {
+	width: 10vh;
+	height: 4vh;
+}
+.berry-info-table img{
+	width: 1em;
+	height: 1em;
+}

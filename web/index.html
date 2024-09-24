@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Berry Schedule Viewer (Gen IV)</title>
+	<script src="js/berry_viewer_iv.js" defer></script>
+	<link rel="stylesheet" type="text/css" href="css/berry_viewer_iv.css" />
+</head>
+<body onload="startScript()">
+	<center>
+		<div class="main-container">
+			<div class="header-container">
+				<h1>Berry Schedule Viewer for Pokemon Gen IV (DPPt & HGSS)</h1>
+			</div>
+			<div class="subheader-container">
+				<p>This tool lets you view the schedule of your berry growth in Gen IV Pokemon (Diamond, Pearl, Platinum, HeartGold and Soulsilver.</p>
+				<p>Just select your berry, mulch (optional) and enter your start time below:</p>
+			</div>
+			<table class="input-table">
+				<tr class="header-row">
+					<th>Berry</th>
+					<th>Mulch</th>
+					<th>Planted Time</th>
+				</tr>
+				<tr class="input-row">
+					<td><center><select name="berries" id="input-berry" onchange="updateBerry()"></select></center></td>
+					<td><center><select name="mulches" id="input-mulch" onchange="updateMulch()"></select></center></td>
+					<td><center><input type="time" id="input-planted-time" value="06:00" onchange="updatePlantedTime()"></center></td>
+				</tr>
+			</table>
+			<div class="hr-container"><hr></div>
+			<div class="result-container">
+				<div class="berry-info-container">
+					<h2><span class="result-berry-name"></span> Growth Information</h2>
+					<table class="berry-info-table">
+						<tr class="header-row">
+							<th>Berry</th>
+							<th>Drain Rate / Hour</th>
+							<th>Full Growth Time</th>
+							<th>Harvest Time</th>
+							<th>Mulch</th>
+							<th>Planted Time</th>
+							<th>Maximum Regrowth</th>
+						</tr>
+						<tr class="detail-row">
+							<td><img id="info-berry-icon"></td>
+							<td><span id="info-drain-rate"></span>%</td>
+							<td><span id="info-full-growth-time"></span>&nbsp;hours</td>
+							<td><span id="info-harvest-time"></span>&nbsp;hours</td>
+							<td><img id="info-mulch-icon"></td>
+							<td><span id="info-planted-time"></span></td>
+							<td><span id="info-max-regrowth"></span>&nbsp;times</td>
+						</tr>
+					</table>
+				</div>
+				<div class="berry-schedule-container">
+					<h2>Growth Schedule</h2>
+					<table class="berry-schedule-table" id="schedule-table">
+						<tr class="header-row">
+							<th>Day</th>
+							<th>Time</th>
+							<th>Berry Stage</th>
+							<th>Moisture</th>
+							<th>Event</th>
+							<th>Water?</th>
+						</tr>
+					</table>
+				</div>
+		</div>
+	</center>
+</body>
+</html>

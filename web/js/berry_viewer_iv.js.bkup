@@ -1,0 +1,163 @@
+const ELM_NAME_INPUT_BERRY = "berry-dropdown";
+const ELM_NAME_INPUT_PLANT_TIME = "start-time-chooser";
+const ELM_NAME_INFO_PLANT_TIME = "result-start-time";
+
+let berryData = null;
+let mulchData = null;
+let plantTime = null;
+
+function berry_viewer_iv_init(){
+	updateStartTime();
+	populateBerryDropdown();
+	populateMulchDropdown();
+}
+function populateBerryDropdown() {
+	fetch('data/berries.json')
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			const dropdown = document.getElementById('berry-dropdown');
+			berryData = data;
+			dropdown.innerHTML = ''; // Clear existing options
+
+			data.forEach(berry => {
+				const option = document.createElement('option');
+				option.value = berry.id;
+				option.textContent = berry.name;
+				dropdown.appendChild(option);
+			});
+			updateBerries();
+		})
+		.catch(error => {
+			console.error('Error fetching the berry data:', error);
+		});
+}
+function populateMulchDropdown() {
+	fetch('data/mulches.json')
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			const dropdown = document.getElementById('mulch-dropdown');
+			mulchData = data;
+			dropdown.innerHTML = ''; // Clear existing options
+
+			data.forEach(mulch => {
+				const option = document.createElement('option');
+				option.value = mulch.id;
+				option.textContent = mulch.name;
+				dropdown.appendChild(option);
+			});
+			updateMulches();
+		})
+		.catch(error => {
+			console.error('Error fetching the mulch data:', error);
+		});
+}
+function updateInput(elm){
+	if (elm.id == ELM_NAME_INPUT_PLANT_TIME){
+		document.getElementById(ELM_NAME_INFO_PLANT_TIME).innerHTNL = formatAmPmHour(elm.value);
+	}
+}
+
+// TODO: make a shared function that updates the info table every time any field is changed.
+function updateBerries(){
+	const dropdown = document.getElementById('berry-dropdown');
+	const berryIcon = document.getElementById("result-berry-icon");
+	const berryDrainage = document.getElementById("result-berry-drainage");
+	const berryFgt = document.getElementById("result-berry-full-growth-time");
+	const berryHarvestTime = document.getElementById("result-berry-harvest-time");
+	const berryNames = document.getElementsByClassName("result-berry-name");
+	berryIcon.src = "img/berries/" + dropdown.value + ".png";
+	berryIcon.alt = dropdown.options[dropdown.selectedIndex].text;
+	berryIcon.title = dropdown.options[dropdown.selectedIndex].text;
+	for (let i=0; i < berryNames.length; i++){
+		berryNames[i].innerHTML = dropdown.options[dropdown.selectedIndex].text;
+	}
+	berryDrainage.innerHTML = berryData[dropdown.selectedIndex].drain_rate + "%";
+	berryFgt.innerHTML = berryData[dropdown.selectedIndex].stage_4 + " hours";
+	berryHarvestTime.innerHTML = berryData[dropdown.selectedIndex].stage_4 + " hours";
+	
+	updateTableBerry();
+}
+function updateMulches(){
+	const dropdown = document.getElementById('mulch-dropdown');
+	const mulchIcon = document.getElementById("result-mulch-icon");
+	const berryHarvestTime = document.getElementById("result-berry-harvest-time");
+	
+	mulchIcon.src = "img/mulches/" + dropdown.value + ".png";
+	mulchIcon.alt = dropdown.options[dropdown.selectedIndex].text;
+	mulchIcon.title = dropdown.options[dropdown.selectedIndex].text;
+	updateTableMulch();
+}
+function updateStartTime(){
+	const colNames = ["detail-day", "detail-time", "detail-stage", "detail-moisture", "detail-event", "detail-water"];
+	const starttimeinput = document.getElementById(ELM_NAME_INPUT_PLANT_TIME);
+	const starttimevalue = formatAmPmHour(starttimeinput.value);
+	const firstRowValues = [0, starttimevalue, getStageImage("0_0"), "100%", "<span class='result-berry-name'>Berry</span> was planted.", "-"];
+	document.getElementById("result-start-time").innerHTML = starttimevalue;
+	
+	let scheduleTable = document.getElementById('result-schedule');
+	for(let i=1; i<scheduleTable.children.length; i++){
+		scheduleTable.removeChild(scheduleTable.children[i]);
+	}
+	
+	let newRow = document.createElement('tr');
+	newRow.className = "detail-row";
+	scheduleTable.appendChild(newRow);
+	for(let i=0; i<colNames.length; i++){
+		let newCol = document.createElement('td');
+		newCol.className = colNames[i];
+		newCol.innerHTML = firstRowValues[i];
+		newRow.appendChild(newCol);
+	}
+}
+function formatAmPmHour(hourStr) {
+	const hourStrParts = hourStr.split(":");
+	if (parseInt(hourStrParts[0]) < 12) {
+		return hourStr + " AM";
+	}
+	else if (parseInt(hourStrParts[0]) == 12 && parseInt(hourStrParts[1]) == 0) {
+		return hourStr + " PM";
+	}
+	else {
+		if (parseInt(hourStrParts[0]) - 12 < 10){
+			return "0" + (parseInt(hourStrParts[0]) - 12) + ":" + hourStrParts[1] + " PM";
+		}
+		return (parseInt(hourStrParts[0]) - 12) + ":" + hourStrParts[1] + " PM";
+	}
+}
+function formatMilHour(hourStr) {
+	const meridian = hourStr.split(" ")[1];
+	const hourStrParts = hourStr.split(":");
+	let offset = 0;
+	if (meridian == "PM" && hourStrParts[0] < 12) {
+		offset = 12;
+	}
+	return (parseInt(hourStrParts[0]) + offset) + ":" + hourStrParts[1];
+}
+function updateTableBerry(){
+	const selectedBerryId = parseInt(document.getElementById('berry-dropdown').value);
+	let selectedBerryData = null;
+	berryData.every(berry => {
+		if (berry.id == selectedBerryId){
+			selectedBerryData = berry;
+			return false;
+		}
+		return true;
+	});
+	
+}
+function updateTableMulch(){
+	console.log(mulchData);
+}
+function getStageImage(berryStage){
+	return "<img src='img/stages/" + berryStage + ".png'>";
+}

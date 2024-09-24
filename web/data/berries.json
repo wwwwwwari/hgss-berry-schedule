@@ -1,0 +1,578 @@
+[
+  {
+    "id": 1,
+    "name": "Cheri Berry",
+    "drain_rate": 15,
+    "stage_1": 3,
+    "stage_2": 6,
+    "stage_3": 9,
+    "stage_4": 12
+  },
+  {
+    "id": 2,
+    "name": "Chesto Berry",
+    "drain_rate": 15,
+    "stage_1": 3,
+    "stage_2": 6,
+    "stage_3": 9,
+    "stage_4": 12
+  },
+  {
+    "id": 3,
+    "name": "Pecha Berry",
+    "drain_rate": 15,
+    "stage_1": 3,
+    "stage_2": 6,
+    "stage_3": 9,
+    "stage_4": 12
+  },
+  {
+    "id": 4,
+    "name": "Rawst Berry",
+    "drain_rate": 15,
+    "stage_1": 3,
+    "stage_2": 6,
+    "stage_3": 9,
+    "stage_4": 12
+  },
+  {
+    "id": 5,
+    "name": "Aspear Berry",
+    "drain_rate": 15,
+    "stage_1": 3,
+    "stage_2": 6,
+    "stage_3": 9,
+    "stage_4": 12
+  },
+  {
+    "id": 6,
+    "name": "Leppa Berry",
+    "drain_rate": 15,
+    "stage_1": 4,
+    "stage_2": 8,
+    "stage_3": 12,
+    "stage_4": 16
+  },
+  {
+    "id": 7,
+    "name": "Oran Berry",
+    "drain_rate": 15,
+    "stage_1": 4,
+    "stage_2": 8,
+    "stage_3": 12,
+    "stage_4": 16
+  },
+  {
+    "id": 8,
+    "name": "Persim Berry",
+    "drain_rate": 15,
+    "stage_1": 4,
+    "stage_2": 8,
+    "stage_3": 12,
+    "stage_4": 16
+  },
+  {
+    "id": 9,
+    "name": "Lum Berry",
+    "drain_rate": 8,
+    "stage_1": 12,
+    "stage_2": 24,
+    "stage_3": 36,
+    "stage_4": 48
+  },
+  {
+    "id": 10,
+    "name": "Sitrus Berry",
+    "drain_rate": 7,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 11,
+    "name": "Figy Berry",
+    "drain_rate": 10,
+    "stage_1": 5,
+    "stage_2": 10,
+    "stage_3": 15,
+    "stage_4": 20
+  },
+  {
+    "id": 12,
+    "name": "Wiki Berry",
+    "drain_rate": 10,
+    "stage_1": 5,
+    "stage_2": 10,
+    "stage_3": 15,
+    "stage_4": 20
+  },
+  {
+    "id": 13,
+    "name": "Mago Berry",
+    "drain_rate": 10,
+    "stage_1": 5,
+    "stage_2": 10,
+    "stage_3": 15,
+    "stage_4": 20
+  },
+  {
+    "id": 14,
+    "name": "Aguav Berry",
+    "drain_rate": 10,
+    "stage_1": 5,
+    "stage_2": 10,
+    "stage_3": 15,
+    "stage_4": 20
+  },
+  {
+    "id": 15,
+    "name": "Iapapa Berry",
+    "drain_rate": 10,
+    "stage_1": 5,
+    "stage_2": 10,
+    "stage_3": 15,
+    "stage_4": 20
+  },
+  {
+    "id": 16,
+    "name": "Razz Berry",
+    "drain_rate": 35,
+    "stage_1": 2,
+    "stage_2": 4,
+    "stage_3": 6,
+    "stage_4": 8
+  },
+  {
+    "id": 17,
+    "name": "Bluk Berry",
+    "drain_rate": 35,
+    "stage_1": 2,
+    "stage_2": 4,
+    "stage_3": 6,
+    "stage_4": 8
+  },
+  {
+    "id": 18,
+    "name": "Nanab Berry",
+    "drain_rate": 35,
+    "stage_1": 2,
+    "stage_2": 4,
+    "stage_3": 6,
+    "stage_4": 8
+  },
+  {
+    "id": 19,
+    "name": "Wepear Berry",
+    "drain_rate": 35,
+    "stage_1": 2,
+    "stage_2": 4,
+    "stage_3": 6,
+    "stage_4": 8
+  },
+  {
+    "id": 20,
+    "name": "Pinap Berry",
+    "drain_rate": 35,
+    "stage_1": 2,
+    "stage_2": 4,
+    "stage_3": 6,
+    "stage_4": 8
+  },
+  {
+    "id": 21,
+    "name": "Pomeg Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 22,
+    "name": "Kelpsy Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 23,
+    "name": "Qualot Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 24,
+    "name": "Hondew Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 25,
+    "name": "Grepa Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 26,
+    "name": "Tamato Berry",
+    "drain_rate": 8,
+    "stage_1": 8,
+    "stage_2": 16,
+    "stage_3": 24,
+    "stage_4": 32
+  },
+  {
+    "id": 27,
+    "name": "Cornn Berry",
+    "drain_rate": 10,
+    "stage_1": 6,
+    "stage_2": 12,
+    "stage_3": 18,
+    "stage_4": 24
+  },
+  {
+    "id": 28,
+    "name": "Magost Berry",
+    "drain_rate": 10,
+    "stage_1": 6,
+    "stage_2": 12,
+    "stage_3": 18,
+    "stage_4": 24
+  },
+  {
+    "id": 29,
+    "name": "Rabuta Berry",
+    "drain_rate": 10,
+    "stage_1": 6,
+    "stage_2": 12,
+    "stage_3": 18,
+    "stage_4": 24
+  },
+  {
+    "id": 30,
+    "name": "Nomel Berry",
+    "drain_rate": 10,
+    "stage_1": 6,
+    "stage_2": 12,
+    "stage_3": 18,
+    "stage_4": 24
+  },
+  {
+    "id": 31,
+    "name": "Spelon Berry",
+    "drain_rate": 8,
+    "stage_1": 15,
+    "stage_2": 30,
+    "stage_3": 45,
+    "stage_4": 60
+  },
+  {
+    "id": 32,
+    "name": "Pamtre Berry",
+    "drain_rate": 8,
+    "stage_1": 15,
+    "stage_2": 30,
+    "stage_3": 45,
+    "stage_4": 60
+  },
+  {
+    "id": 33,
+    "name": "Watmel Berry",
+    "drain_rate": 8,
+    "stage_1": 15,
+    "stage_2": 30,
+    "stage_3": 45,
+    "stage_4": 60
+  },
+  {
+    "id": 34,
+    "name": "Durin Berry",
+    "drain_rate": 8,
+    "stage_1": 15,
+    "stage_2": 30,
+    "stage_3": 45,
+    "stage_4": 60
+  },
+  {
+    "id": 35,
+    "name": "Belue Berry",
+    "drain_rate": 8,
+    "stage_1": 15,
+    "stage_2": 30,
+    "stage_3": 45,
+    "stage_4": 60
+  },
+  {
+    "id": 36,
+    "name": "Occa Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 37,
+    "name": "Passho Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 38,
+    "name": "Wacan Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 39,
+    "name": "Rindo Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 40,
+    "name": "Yache Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 41,
+    "name": "Chople Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 42,
+    "name": "Kebia Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 43,
+    "name": "Shuca Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 44,
+    "name": "Coba Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 45,
+    "name": "Payapa Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 46,
+    "name": "Tanga Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 47,
+    "name": "Charti Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 48,
+    "name": "Kasib Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 49,
+    "name": "Haban Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 50,
+    "name": "Colbur Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 51,
+    "name": "Babiri Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 52,
+    "name": "Chilan Berry",
+    "drain_rate": 6,
+    "stage_1": 18,
+    "stage_2": 36,
+    "stage_3": 54,
+    "stage_4": 72
+  },
+  {
+    "id": 53,
+    "name": "Liechi Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 54,
+    "name": "Ganlon Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 55,
+    "name": "Salac Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 56,
+    "name": "Petaya Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 57,
+    "name": "Apicot Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 58,
+    "name": "Lansat Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 59,
+    "name": "Starf Berry",
+    "drain_rate": 4,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 60,
+    "name": "Enigma Berry",
+    "drain_rate": 7,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 61,
+    "name": "Micle Berry",
+    "drain_rate": 7,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 62,
+    "name": "Custap Berry",
+    "drain_rate": 7,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 63,
+    "name": "Jaboca Berry",
+    "drain_rate": 7,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  },
+  {
+    "id": 64,
+    "name": "Rowap Berry",
+    "drain_rate": 7,
+    "stage_1": 24,
+    "stage_2": 48,
+    "stage_3": 72,
+    "stage_4": 96
+  }
+]
