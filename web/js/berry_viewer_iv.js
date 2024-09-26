@@ -21,7 +21,7 @@ const ELM_CLS_SCHEDULE_COL_STAGE = "schedule-stage";
 const ELM_CLS_SCHEDULE_COL_MOISTURE = "schedule-moisture";
 const ELM_CLS_SCHEDULE_COL_EVENT = "schedule-event";
 const ELM_CLS_SCHEDULE_COL_WATER = "schedule-water";
-const ELM_CLS_SCHEDULE_COL_WATER_BOX = "schedule-water-checkbox";
+const ELM_CLS_SCHEDULE_COL_WATER_BOX = "schedule-water-check";
 
 const DATA_NAME_MULCH_NONE = "None";
 const DATA_NAME_MULCH_GROWTH = "Growth Mulch";
@@ -41,6 +41,7 @@ const MISC_EXT_BERRIES = ".png";
 const MISC_EXT_MULCHES = ".png";
 const MISC_EXT_STAGES = ".png";
 const MISC_SEP_TIME = ":";
+const MISC_ROW_HIGHLIGHT_COLOR = "#1B6ACB";
 
 let berryData = null;
 let mulchData = null;
@@ -255,7 +256,7 @@ function updateSchedule(){
 	elmScheduleTable.innerHTML = htmlScheduleHeaderRow;
 	
 	// First row
-	createScheduleRow(0, formatAmPmHour(elmInputPlantedTime.value), currentStageImg, 100 + "%", currentBerry.name + " was planted.", getElmWaterCheckBox(0, false));
+	createScheduleRow(0, formatAmPmHour(elmInputPlantedTime.value), currentStageImg, 100 + "%", currentBerry.name + " was planted.", getElmWaterCheck(0, false));
 	growthStageData = calculateGrowthStages(currentBerry);
 	moistureStageData = calculateMoistureStages(currentBerry);
 	
@@ -268,7 +269,7 @@ function updateSchedule(){
 			eventStr = growthStageData[j][INDEX_GROWTH_EVENT_DESC] + "<br>" + eventStr;
 			j++;
 		}
-		createScheduleRow(moistureStageData[i][INDEX_DAY], moistureStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheckBox(k, moistureStageData[i][INDEX_MOISTURE_SHOULD_WATER]));
+		createScheduleRow(moistureStageData[i][INDEX_DAY], moistureStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, moistureStageData[i][INDEX_MOISTURE_SHOULD_WATER]));
 		k++;
 
 		// if there is a growth stage row is between current and next moisture rows
@@ -276,7 +277,7 @@ function updateSchedule(){
 			if (moistureStageData[i][INDEX_HOUR] < growthStageData[j][INDEX_HOUR] && moistureStageData[i+1][INDEX_HOUR] > growthStageData[j][INDEX_HOUR]){
 				currentStageImg = growthStageData[j][INDEX_GROWTH_STAGE_IMAGE];
 				eventStr = growthStageData[j][INDEX_GROWTH_EVENT_DESC];
-				createScheduleRow(growthStageData[j][INDEX_DAY], growthStageData[j][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheckBox(k, false));
+				createScheduleRow(growthStageData[j][INDEX_DAY], growthStageData[j][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, false));
 				j++;
 				k++;
 			}
@@ -288,7 +289,7 @@ function updateSchedule(){
 		for (let i=j; i<growthStageData.length; i++){
 			currentStageImg = growthStageData[i][INDEX_GROWTH_STAGE_IMAGE];
 			eventStr = growthStageData[i][INDEX_GROWTH_EVENT_DESC];
-			createScheduleRow(growthStageData[i][INDEX_DAY], growthStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[moistureStageData.length - 1][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheckBox(k, false));
+			createScheduleRow(growthStageData[i][INDEX_DAY], growthStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[moistureStageData.length - 1][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, false));
 			k++;
 		}
 	}
@@ -297,6 +298,9 @@ function createScheduleRow(schedDay, schedTime, schedStage, schedMoisture, sched
 	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
 	const elmNewRow = document.createElement("tr");
 	elmNewRow.className = ELM_CLS_SCHEDULE_ROW;
+	if (schedWater.includes(ELM_CLS_SCHEDULE_COL_WATER_BOX + "_img")){
+		elmNewRow.style.backgroundColor = MISC_ROW_HIGHLIGHT_COLOR;
+	}
 	elmScheduleTable.appendChild(elmNewRow);
 
 	createScheduleCol(ELM_CLS_SCHEDULE_COL_DAY, schedDay, elmNewRow);
@@ -353,21 +357,14 @@ function getElmStageImg(berryNum, stageNum){
 	newElmImg.title = STAGE_GROWTH_NAME[stageNum];
 	return newElmImg.outerHTML;
 }
-function getElmWaterCheckBox(rowNum, isChecked){
-	const newElmCheck = document.createElement("input");
-	let returnHTML = "";
-	newElmCheck.type = "checkbox";
+function getElmWaterCheck(rowNum, isChecked){
+	const newElmCheck = document.createElement("span");
 	newElmCheck.className = ELM_CLS_SCHEDULE_COL_WATER_BOX;
 	newElmCheck.id = ELM_CLS_SCHEDULE_COL_WATER_BOX + "-" + rowNum;
-	returnHTML = newElmCheck.outerHTML;
-	// for whatever reason, setting "checked" attribute to true from JS doesn't tick the box.
-	// TODO: qwe change checkbox to something better...
 	if (isChecked){
-		returnHTMLparts = returnHTML.split(">");
-		returnHTMLparts[returnHTMLparts.length-2] = returnHTMLparts[returnHTMLparts.length-2] + " checked";
-		returnHTML = returnHTMLparts.join(">");
+		newElmCheck.innerHTML = "<img src=\"img/water.png\" class=\"" + ELM_CLS_SCHEDULE_COL_WATER_BOX + "_img\">";
 	}
-	return returnHTML;
+	return newElmCheck.outerHTML;
 }
 function calculateGrowthStages(){
 	const NUM_STAGES = 5;
@@ -435,16 +432,3 @@ function addTime24h(time24h1, time24h2){
 	}
 	return [isNewDay, formatClockLeadZero(time3h) + MISC_SEP_TIME + formatClockLeadZero(time3m)];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
