@@ -20,8 +20,9 @@ const ELM_CLS_SCHEDULE_COL_TIME = "schedule-time";
 const ELM_CLS_SCHEDULE_COL_STAGE = "schedule-stage";
 const ELM_CLS_SCHEDULE_COL_MOISTURE = "schedule-moisture";
 const ELM_CLS_SCHEDULE_COL_EVENT = "schedule-event";
-const ELM_CLS_SCHEDULE_COL_WATER = "schedule-water";
-const ELM_CLS_SCHEDULE_COL_WATER_BOX = "schedule-water-check";
+
+const ATTR_NAME_GROWTH_STAGE = "growth-stage";
+const ATTR_NAME_MOISTURE = "moisture-level";
 
 const DATA_NAME_MULCH_NONE = "None";
 const DATA_NAME_MULCH_GROWTH = "Growth Mulch";
@@ -236,10 +237,8 @@ function updateSchedule(){
 	const INDEX_DAY_HOUR = 2;
 
 	const INDEX_GROWTH_STAGE_IMAGE = 3;
-	const INDEX_GROWTH_EVENT_DESC = 4;
+	const INDEX_GROWTH_STAGE_NUM = 4;
 	const INDEX_MOISTURE_MOISTURE_PERCENT = 3;
-	const INDEX_MOISTURE_SHOULD_WATER = 4;
-	const INDEX_MOISTURE_EVENT_DESC = 5;
 
 	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
 	const htmlScheduleHeaderRow = elmScheduleTable.firstElementChild.outerHTML;
@@ -251,64 +250,153 @@ function updateSchedule(){
 	
 	let growthStageData = [];
 	let moistureStageData = [];
-	let currentStageImg = getElmStageImg(0, 0);
+	let currentStageNum = 0;
+	let currentStageImg = getElmStageImg(0, currentStageNum);
+	let currentMoisture = 100;
+	let prevStageNum = currentStageNum;
+	let prevMoisture = currentMoisture;
 	
 	elmScheduleTable.innerHTML = htmlScheduleHeaderRow;
 	
 	// First row
-	createScheduleRow(0, formatAmPmHour(elmInputPlantedTime.value), currentStageImg, 100 + "%", currentBerry.name + " was planted.", getElmWaterCheck(0, false));
-	growthStageData = calculateGrowthStages(currentBerry);
-	moistureStageData = calculateMoistureStages(currentBerry);
+	createScheduleRow(0, formatAmPmHour(elmInputPlantedTime.value), currentStageImg, currentStageNum, currentMoisture, currentBerry.name + " was planted.");
+	growthStageData = getGrowthStageList(currentBerry);
+	moistureStageData = getMoistureList(currentBerry);
 	
 	let j=0;
-	let k=1;
 	for (let i=0; i<moistureStageData.length; i++){
-		let eventStr = moistureStageData[i][INDEX_MOISTURE_EVENT_DESC];
+		let eventStr = "";
+		currentMoisture = moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT];
 		if (moistureStageData[i][INDEX_HOUR] == growthStageData[j][INDEX_HOUR]){
 			currentStageImg = growthStageData[j][INDEX_GROWTH_STAGE_IMAGE];
-			eventStr = growthStageData[j][INDEX_GROWTH_EVENT_DESC] + "<br>" + eventStr;
+			currentStageNum = growthStageData[j][INDEX_GROWTH_STAGE_NUM];
 			j++;
 		}
-		createScheduleRow(moistureStageData[i][INDEX_DAY], moistureStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, moistureStageData[i][INDEX_MOISTURE_SHOULD_WATER]));
-		k++;
+		eventStr = getDescription(currentBerryData.berryName, currentStageNum, currentMoisture, prevStageNum, prevMoisture);
+		
+		createScheduleRow(moistureStageData[i][INDEX_DAY], moistureStageData[i][INDEX_DAY_HOUR], currentStageImg, currentStageNum, currentMoisture, eventStr);
 
 		// if there is a growth stage row is between current and next moisture rows
 		if (i+1 < moistureStageData.length){
 			if (moistureStageData[i][INDEX_HOUR] < growthStageData[j][INDEX_HOUR] && moistureStageData[i+1][INDEX_HOUR] > growthStageData[j][INDEX_HOUR]){
 				currentStageImg = growthStageData[j][INDEX_GROWTH_STAGE_IMAGE];
-				eventStr = growthStageData[j][INDEX_GROWTH_EVENT_DESC];
-				createScheduleRow(growthStageData[j][INDEX_DAY], growthStageData[j][INDEX_DAY_HOUR], currentStageImg, moistureStageData[i][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, false));
+				eventStr = getDescription(currentBerryData.berryName, currentStageNum, currentMoisture, growthStageData[j][INDEX_GROWTH_STAGE_NUM], currentMoisture);
+				createScheduleRow(growthStageData[j][INDEX_DAY], growthStageData[j][INDEX_DAY_HOUR], currentStageImg, currentStageNum, currentMoisture, eventStr);
 				j++;
-				k++;
 			}
 		}
+		prevStageNum = currentStageNum;
+		prevMoisture = currentMoisture;
 
 	}
 	// if there are leftover growth stage rows
 	if (j < growthStageData.length){
 		for (let i=j; i<growthStageData.length; i++){
 			currentStageImg = growthStageData[i][INDEX_GROWTH_STAGE_IMAGE];
-			eventStr = growthStageData[i][INDEX_GROWTH_EVENT_DESC];
-			createScheduleRow(growthStageData[i][INDEX_DAY], growthStageData[i][INDEX_DAY_HOUR], currentStageImg, moistureStageData[moistureStageData.length - 1][INDEX_MOISTURE_MOISTURE_PERCENT]+"%", eventStr, getElmWaterCheck(k, false));
-			k++;
+			currentStageNum = growthStageData[i][INDEX_GROWTH_STAGE_NUM];
+			currentMoisture = moistureStageData[moistureStageData.length - 1][INDEX_MOISTURE_MOISTURE_PERCENT];
+			prevStageNum = -1; //forced growth stage description
+			prevMoisture = currentMoisture;
+			eventStr = getDescription(currentBerryData.berryName, currentStageNum, currentMoisture, prevStageNum, prevMoisture);
+			createScheduleRow(growthStageData[i][INDEX_DAY], growthStageData[i][INDEX_DAY_HOUR], currentStageImg, currentStageNum, currentMoisture, eventStr);
+		}
+	}
+	// initialize watering time
+	highlightGoodWaterTime();
+}
+function setMoisture(rowNum){
+	const INITIAL_WATER_MOISTURE = 100;
+	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
+	const elmScheduleRows = elmScheduleTable.getElementsByTagName("tr");
+	elmScheduleRows[rowNum].setAttribute(ATTR_NAME_MOISTURE, INITIAL_WATER_MOISTURE);
+	elmScheduleRows[rowNum].getElementsByClassName(ELM_CLS_SCHEDULE_COL_MOISTURE)[0].innerHTML = INITIAL_WATER_MOISTURE + "%";
+	elmScheduleRows[rowNum].style.backgroundColor = MISC_ROW_HIGHLIGHT_COLOR;
+	let prevMoisture = INITIAL_WATER_MOISTURE;
+	if (rowNum + 1 < elmScheduleRows.length){
+		for (let i=rowNum + 1; i < elmScheduleRows.length; i++){
+			if (elmScheduleRows[i].getAttribute(ATTR_NAME_MOISTURE) < INITIAL_WATER_MOISTURE){		
+				let newMoisture = prevMoisture - currentBerryData.drainRate;
+				if (newMoisture < 0){
+					newMoisture = 0;
+				}
+				elmScheduleRows[i].setAttribute(ATTR_NAME_MOISTURE, newMoisture);
+				elmScheduleRows[i].getElementsByClassName(ELM_CLS_SCHEDULE_COL_MOISTURE)[0].innerHTML = newMoisture + "%";
+				elmScheduleRows[i].getElementsByClassName(ELM_CLS_SCHEDULE_COL_EVENT)[0].innerHTML = getDescription(currentBerryData.berryName, elmScheduleRows[i].getAttribute(ATTR_NAME_GROWTH_STAGE), newMoisture, elmScheduleRows[i-1].getAttribute(ATTR_NAME_GROWTH_STAGE), prevMoisture);
+				prevMoisture = newMoisture;
+			}
+			else{
+				break;
+			}
 		}
 	}
 }
-function createScheduleRow(schedDay, schedTime, schedStage, schedMoisture, schedEvent, schedWater){
+function unsetMoisture(rowNum){
+	const INITIAL_WATER_MOISTURE = 100;
+	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
+	const elmScheduleRows = elmScheduleTable.getElementsByTagName("tr");
+	let newMoisture = INITIAL_WATER_MOISTURE;
+	elmScheduleRows[rowNum].style.backgroundColor = null;
+	if (rowNum > 1){
+		newMoisture = elmScheduleRows[rowNum - 1].getAttribute(ATTR_NAME_MOISTURE) - currentBerryData.drainRate;
+		elmScheduleRows[rowNum].setAttribute(ATTR_NAME_MOISTURE, newMoisture);
+		elmScheduleRows[rowNum].getElementsByClassName(ELM_CLS_SCHEDULE_COL_MOISTURE)[0].innerHTML = newMoisture + "%";
+	}
+	let prevMoisture = newMoisture;
+	if (rowNum + 1 < elmScheduleRows.length){
+		for (let i=rowNum + 1; i < elmScheduleRows.length; i++){
+			if (elmScheduleRows[i].getAttribute(ATTR_NAME_MOISTURE) < INITIAL_WATER_MOISTURE){		
+				let newMoisture = prevMoisture - currentBerryData.drainRate;
+				if (newMoisture < 0){
+					newMoisture = 0;
+				}
+				elmScheduleRows[i].setAttribute(ATTR_NAME_MOISTURE, newMoisture);
+				elmScheduleRows[i].getElementsByClassName(ELM_CLS_SCHEDULE_COL_MOISTURE)[0].innerHTML = newMoisture + "%";
+				elmScheduleRows[i].getElementsByClassName(ELM_CLS_SCHEDULE_COL_EVENT)[0].innerHTML = getDescription(currentBerryData.berryName, elmScheduleRows[i].getAttribute(ATTR_NAME_GROWTH_STAGE), newMoisture, elmScheduleRows[i-1].getAttribute(ATTR_NAME_GROWTH_STAGE), prevMoisture);
+				prevMoisture = newMoisture;
+			}
+			else{
+				break;
+			}
+		}
+	}
+}
+// Automatically highlight rows as part of the table initialization
+function highlightGoodWaterTime(){
+	const INITIAL_WATER_MOISTURE = 100;
+	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
+	const elmScheduleRows = elmScheduleTable.getElementsByTagName("tr");
+	let currentRowMoisture = INITIAL_WATER_MOISTURE;
+	for (let i=1; i < elmScheduleRows.length; i++){ //skip the first row (header)
+		if (elmScheduleRows[i].getAttribute(ATTR_NAME_GROWTH_STAGE) < 4){
+			if (elmScheduleRows[i].getAttribute(ATTR_NAME_MOISTURE) != elmScheduleRows[i+1].getAttribute(ATTR_NAME_MOISTURE) && elmScheduleRows[i+1].getAttribute(ATTR_NAME_MOISTURE) == 0){
+				setMoisture(i);
+			}
+		}
+	}
+}
+function createScheduleRow(schedDay, schedTime, schedStageImg, schedStageNum, schedMoisture, schedEvent){
 	const elmScheduleTable = document.getElementById(ELM_NAME_SCHEDULE_TABLE);
 	const elmNewRow = document.createElement("tr");
+	
 	elmNewRow.className = ELM_CLS_SCHEDULE_ROW;
-	if (schedWater.includes(ELM_CLS_SCHEDULE_COL_WATER_BOX + "_img")){
-		elmNewRow.style.backgroundColor = MISC_ROW_HIGHLIGHT_COLOR;
-	}
+	
+	elmNewRow.setAttribute(ATTR_NAME_GROWTH_STAGE, schedStageNum);
+	elmNewRow.setAttribute(ATTR_NAME_MOISTURE, schedMoisture);
+	elmNewRow.addEventListener('click', () => {
+		if (elmNewRow.style.backgroundColor){
+			unsetMoisture(elmNewRow.rowIndex);
+		}
+		else{
+			setMoisture(elmNewRow.rowIndex);
+		}
+	});
 	elmScheduleTable.appendChild(elmNewRow);
 
 	createScheduleCol(ELM_CLS_SCHEDULE_COL_DAY, schedDay, elmNewRow);
 	createScheduleCol(ELM_CLS_SCHEDULE_COL_TIME, schedTime, elmNewRow);
-	createScheduleCol(ELM_CLS_SCHEDULE_COL_STAGE, schedStage, elmNewRow);
-	createScheduleCol(ELM_CLS_SCHEDULE_COL_MOISTURE, schedMoisture, elmNewRow);
+	createScheduleCol(ELM_CLS_SCHEDULE_COL_STAGE, schedStageImg, elmNewRow);
+	createScheduleCol(ELM_CLS_SCHEDULE_COL_MOISTURE, schedMoisture + "%", elmNewRow);
 	createScheduleCol(ELM_CLS_SCHEDULE_COL_EVENT, schedEvent, elmNewRow);
-	createScheduleCol(ELM_CLS_SCHEDULE_COL_WATER, schedWater, elmNewRow);
 }
 function createScheduleCol(colCls, colContent, row){
 	const elmNewCol = document.createElement("td");
@@ -346,6 +434,52 @@ function formatClockLeadZero(number){
 	}
 	return number;
 }
+function getDescription(berryName, stageNum, moisture, prevStageNum, prevMoisture){
+	const BERRY_TREE_STAGENUM = 4;
+	stageDesc = "";
+	moistureDesc = "";
+	isStageChanged = false;
+	isMoistureChanged = false;
+	isDry = false;
+	if (stageNum == BERRY_TREE_STAGENUM){
+		return berryName + " grows into a " + STAGE_GROWTH_NAME[stageNum] + "!";
+	}
+	if (stageNum > prevStageNum){
+		isStageChanged = true;
+		stageDesc = "grows into a " + STAGE_GROWTH_NAME[stageNum];
+	}
+	if (moisture == 0){
+		isDry = true;
+	}
+	if (moisture < prevMoisture){
+		isMoistureChanged = true;
+		if (isDry){
+			moistureDesc = "dries out!";
+		}
+		else{
+			moistureDesc = "loses moisture.";
+		}
+	}
+	if (isStageChanged && isMoistureChanged){
+		return berryName + " " + stageDesc + " and " + moistureDesc;
+	}
+	else{
+		if (isStageChanged){
+			return berryName + " " + stageDesc + "!";
+		}
+		else{
+			if (isMoistureChanged){
+				return berryName + " " + moistureDesc;
+			}
+			else{
+				if (isDry){
+					return berryName + " is dry.";
+				}
+			}
+		}
+	}
+	return null;
+}
 function getElmStageImg(berryNum, stageNum){
 	const newElmImg = document.createElement("img");
 	if (stageNum <= 1){
@@ -357,16 +491,7 @@ function getElmStageImg(berryNum, stageNum){
 	newElmImg.title = STAGE_GROWTH_NAME[stageNum];
 	return newElmImg.outerHTML;
 }
-function getElmWaterCheck(rowNum, isChecked){
-	const newElmCheck = document.createElement("span");
-	newElmCheck.className = ELM_CLS_SCHEDULE_COL_WATER_BOX;
-	newElmCheck.id = ELM_CLS_SCHEDULE_COL_WATER_BOX + "-" + rowNum;
-	if (isChecked){
-		newElmCheck.innerHTML = "<img src=\"img/water.png\" class=\"" + ELM_CLS_SCHEDULE_COL_WATER_BOX + "_img\">";
-	}
-	return newElmCheck.outerHTML;
-}
-function calculateGrowthStages(){
+function getGrowthStageList(){
 	const NUM_STAGES = 5;
 	const DAY_HOURS = 24;
 
@@ -376,37 +501,32 @@ function calculateGrowthStages(){
 	for (let i=1; i<NUM_STAGES; i++){
 		let stageHour = stageDuration * i;
 		let stageNum = i;
-		let stageName = currentBerryData.berryName + " grows into a " + STAGE_GROWTH_NAME[i] + "!";
 		let stageDay = Math.floor(stageHour/DAY_HOURS);
 		let stageDayHour = formatClockLeadZero(Math.floor(stageHour % DAY_HOURS));
 		let stageDayMin = formatClockLeadZero(((stageHour % DAY_HOURS) - stageDayHour) * 60);
 		let stageDayTime24h = addTime24h(currentBerryData.plantedTime24h, stageDayHour + MISC_SEP_TIME + stageDayMin);
-		stageList.push([stageHour, stageDay, formatAmPmHour(stageDayTime24h[1]), getElmStageImg(currentBerryData.berryId, stageNum), stageName]);
+		stageList.push([stageHour, stageDay, formatAmPmHour(stageDayTime24h[1]), getElmStageImg(currentBerryData.berryId, stageNum), stageNum]);
 	}
 	return stageList;
 }
-function calculateMoistureStages(){
+function getMoistureList(){
 	const DAY_HOURS = 24;
 
 	let stageList = [];
 	let stageMoisture = 100;
 	for (let i=1; i<currentBerryData.fullGrowthTime; i++){
 		let stageHour = i;
-		let stageName = currentBerryData.berryName + " loses moisture.";
 		let stageDay = Math.floor(stageHour/DAY_HOURS);
 		let stageDayHour = formatClockLeadZero(Math.floor(stageHour % DAY_HOURS));
 		let stageDayMin = formatClockLeadZero(((stageHour % DAY_HOURS) - stageDayHour) * 60);
 		let stageDayTime24h = addTime24h(currentBerryData.plantedTime24h, stageDayHour + MISC_SEP_TIME + stageDayMin);
-		if (stageMoisture - currentBerryData.drainRate > currentBerryData.drainRate){
+		if (stageMoisture - currentBerryData.drainRate > 0){
 			stageMoisture = stageMoisture - currentBerryData.drainRate;
-			isWater = false;
 		}
 		else{
-			stageName = "You should water now!";
-			stageMoisture = 100;
-			isWater = true;
+			stageMoisture = 0;
 		}
-		stageList.push([stageHour, stageDay, formatAmPmHour(stageDayTime24h[1]), stageMoisture, isWater, stageName]);
+		stageList.push([stageHour, stageDay, formatAmPmHour(stageDayTime24h[1]), stageMoisture]);
 	}
 	return stageList;
 }
