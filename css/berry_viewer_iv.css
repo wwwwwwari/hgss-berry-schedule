@@ -69,3 +69,6 @@ table th, td{
 	width: 1em;
 	height: 1em;
 }
+.vert-spacer {
+	height: 3vh;
+}
