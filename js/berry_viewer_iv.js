@@ -338,6 +338,9 @@ function unsetMoisture(rowNum){
 	elmScheduleRows[rowNum].style.backgroundColor = null;
 	if (rowNum > 1){
 		newMoisture = elmScheduleRows[rowNum - 1].getAttribute(ATTR_NAME_MOISTURE) - currentBerryData.drainRate;
+		if (newMoisture < 0){
+			newMoisture = 0;
+		}
 		elmScheduleRows[rowNum].setAttribute(ATTR_NAME_MOISTURE, newMoisture);
 		elmScheduleRows[rowNum].getElementsByClassName(ELM_CLS_SCHEDULE_COL_MOISTURE)[0].innerHTML = newMoisture + "%";
 	}
